@@ -22,6 +22,9 @@
 % Use sans-serif font by default.
 \renewcommand*\familydefault{\sfdefault}
 
+% To abbreviate class names.
+\newcommand{\abbrev}{\textasciitilde}
+
 % Use 8pt sans-serif font in tikzpictures.
 % TODO instead of 8pt, use scaling.
 \newcommand{\fontstyle}{\fontsize{8pt}{12}\selectfont\sffamily}
@@ -63,10 +66,10 @@
         Model \\ \footnotesize{contains SimTK System}
     };
     \node (Frame) [abstract, right=of Model] {Frame};
-    \node (Joint) [abstract, right=9em of Frame] {Joint};
-    \node (Force) [abstract, right=8em of Joint] {Force};
-    \node (Controller) [abstract, right=9em of Force] {Controller};
-    \node (Constraint) [abstract, right=8em of Controller] {Constraint};
+    \node (Joint) [abstract, right=6em of Frame] {Joint};
+    \node (Force) [abstract, right=4em of Joint] {Force};
+    \node (Controller) [abstract, right=6em of Force] {Controller};
+    \node (Constraint) [abstract, right=4em of Controller] {Constraint};
 
     % The midway is just to draw "vertical-horizontal-vertical" path below.
     \draw [<-] (Object) -- (Component) node[midway, draw=none] (kinkC) {};
@@ -81,7 +84,7 @@
 
     % Tool.
     \node (Tool) [abstract, below right=3ex and 4em of Object] {Tool};
-    \node (AbstractTool) [abstract, right=10em of Tool] {AbstractTool};
+    \node (AbstractTool) [abstract, right=7em of Tool] {AbstractTool};
 
     \draw [<-] (Object) -- (Component |- kinkC) -| (Tool);
     \draw [<-] (Object) -- (Component |- kinkC) -| (AbstractTool);
@@ -91,10 +94,10 @@
         ]
         \node (InverseKinematicsTool)
             [below right=of Tool.center]
-            {InverseKinematicsTool};
+            {InverseKinematics\abbrev};
         \node (InverseDynamicsTool)
             [below=of InverseKinematicsTool.west, anchor=west]
-            {InverseDynamicsTool};
+            {InverseDynamics\abbrev};
 
         \draw [<-] (Tool) |- (InverseKinematicsTool);
         \draw [<-] (Tool) |- (InverseDynamicsTool);
@@ -134,7 +137,7 @@
             {Ground};
         \node (PhysicalOffsetFrame)
             [concrete, below=of Ground.west, anchor=west]
-            {PhysicalOffsetFrame};
+            {PhysicalOffset\abbrev};
 
         % "|-" means draw a "vertical-then-horizontal" path.
         \draw [<-] (Frame) |- (Body);
@@ -149,19 +152,19 @@
 
         \node (PinJoint)
             [concrete, below right=of Joint.center]
-            {PinJoint};
+            {Pin\abbrev};
         \node (SliderJoint)
             [concrete, below=of PinJoint.west, anchor=west]
-            {SliderJoint};
+            {Slider\abbrev};
         \node (FreeJoint)
             [concrete, below=of SliderJoint.west, anchor=west]
-            {FreeJoint};
+            {Free\abbrev};
         \node (CustomJoint)
             [concrete, below=of FreeJoint.west, anchor=west]
-            {CustomJoint};
+            {Custom\abbrev};
         \node (WeldJoint)
             [concrete, below=of CustomJoint.west, anchor=west]
-            {WeldJoint};
+            {Weld\abbrev};
 
         \draw [<-] (Joint) |- (PinJoint);
         \draw [<-] (Joint) |- (SliderJoint);
@@ -177,16 +180,16 @@
 
         \node (ExternalForce)
             [concrete, below right=of Force.center]
-            {ExternalForce};
+            {External\abbrev};
         \node (CoordinateLimitForce)
             [concrete, below=of ExternalForce.west, anchor=west]
-            {CoordinateLimitForce};
+            {CoordinateLimit\abbrev};
         \node (BushingForce)
             [concrete, below=of CoordinateLimitForce.west, anchor=west]
-            {BushingForce};
+            {Bushing\abbrev};
         \node (HuntCrossleyForce)
             [concrete, below=of BushingForce.west, anchor=west]
-            {HuntCrossleyForce};
+            {HuntCrossley\abbrev};
         \node (Actuator)
             [abstract, below=16ex of Force]
             {Actuator};
@@ -199,23 +202,23 @@
 
         \node (CoordinateActuator)
             [concrete, below right=of Actuator.center]
-            {CoordinateActuator};
+            {Coordinate\abbrev};
         \node (TorqueActuator)
             [concrete, below=of CoordinateActuator.west, anchor=west]
-            {TorqueActuator};
+            {Torque\abbrev};
         \node (PathActuator)
             [concrete, below=of TorqueActuator.west, anchor=west]
-            {PathActuator};
+            {Path\abbrev};
 
         \node (Muscle)
             [abstract, below right=of PathActuator.center]
             {Muscle};
         \node (Thelen2003Muscle)
             [concrete, below right=of Muscle.center]
-            {Thelen2003Muscle};
+            {Thelen2003\abbrev};
         \node (Millard2012EquilibriumMuscle)
             [concrete, below=of Thelen2003Muscle.west, anchor=west]
-            {Millard2012EquilibriumMuscle};
+            {Millard2012Equilibrium\abbrev};
 
         \draw [<-] (Actuator) |- (CoordinateActuator);
         \draw [<-] (Actuator) |- (TorqueActuator);
@@ -234,7 +237,7 @@
 
         \node (PrescribedController)
             [concrete, below right=of Controller.center]
-            {PrescribedController};
+            {Prescribed\abbrev};
         \node (CMC)
             [concrete, below=of PrescribedController.west, anchor=west]
             {CMC};
@@ -250,13 +253,13 @@
 
         \node (WeldConstraint)
             [concrete, below right=of Constraint.center]
-            {WeldConstraint};
+            {Weld\abbrev};
         \node (PointOnLineConstraint)
             [concrete, below=of WeldConstraint.west, anchor=west]
-            {PointOnLineConstraint};
+            {PointOnLine\abbrev};
         \node (CoordinateCouplerConstraint)
             [concrete, below=of PointOnLineConstraint.west, anchor=west]
-            {CoordinateCouplerConstraint};
+            {CoordinateCoupler\abbrev};
 
         \draw [<-] (Constraint) |- (WeldConstraint);
         \draw [<-] (Constraint) |- (PointOnLineConstraint);
