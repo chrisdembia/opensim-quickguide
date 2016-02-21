@@ -1,0 +1,269 @@
+\documentclass[landscape]{letter}
+%\documentclass[tikz]{standalone}
+\usepackage[margin=0.5in]{geometry}
+% Use the Helvetica font as the sans-serif font.
+\usepackage{helvet} % [scaled]?
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing}
+\usetikzlibrary{graphs}
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+% TODO \usetikzlibrary{calc}
+% TODO \usetikzlibrary{matrix}
+\usegdlibrary{layered}
+\usegdlibrary{circular}
+\usegdlibrary{trees}
+\usegdlibrary{force}
+\begin{document}
+
+% http://tex.stackexchange.com/questions/51228/how-to-increase-the-horizontal-distance-between-nodes
+
+% Use sans-serif font by default.
+\renewcommand*\familydefault{\sfdefault}
+
+% Use 8pt sans-serif font in tikzpictures.
+% TODO instead of 8pt, use scaling.
+\newcommand{\fontstyle}{\fontsize{8pt}{12}\selectfont\sffamily}
+\tikzstyle{every picture}+=[font=\fontstyle]
+
+% Create the node styles that we'll use.
+\tikzstyle{abstract}=[
+    % Node text will be italic.
+    font=\fontstyle\itshape
+]
+\tikzstyle{concrete}=[
+]
+% TODO \tikzstyle{horzvert path}=[to path={-| (\tikztotarget)}]
+% TODO \tikzstyle{verthorz path}=[to path={|- (\tikztotarget)}]
+
+\begin{tikzpicture}[
+% TODO    font=\sffamily
+%        every node/.style={draw}, % TODO for debugging.
+        node distance=3ex and 1.2em, % <vertical> and <horizontal>
+    ]
+    % TODO a symbol to indicate that a class was skipped in the hierarchy.
+    % TODO abbreviate class names.
+    % TODO add in PhysicalFrame
+    % TODO try to make a tree out of the top few nodes, so that I can get some
+    % nice centering?
+    % TODO use node label as text.
+    % TODO there is a "below right of"
+    \node (Object) [abstract, align=center] {
+        Object \\ \footnotesize{properties}
+    };
+    % TODO don't italicize the mini descriptions.
+    % TODO perhaps the descriptions aren't part of the nodes, but 
+    % beside them somehow
+    \node (Component) [abstract, below=of Object, align=center] {
+        Component \\ \footnotesize{connectors, inputs, outputs}
+    };
+    \node (ModelComponent) [abstract, below=8ex of Component] {ModelComponent};
+    \node (Model) [below=of ModelComponent, align=center] {
+        Model \\ \footnotesize{contains SimTK System}
+    };
+    \node (Frame) [abstract, right=of Model] {Frame};
+    \node (Joint) [abstract, right=9em of Frame] {Joint};
+    \node (Force) [abstract, right=8em of Joint] {Force};
+    \node (Controller) [abstract, right=9em of Force] {Controller};
+    \node (Constraint) [abstract, right=8em of Controller] {Constraint};
+
+    % The midway is just to draw "vertical-horizontal-vertical" path below.
+    \draw [<-] (Object) -- (Component) node[midway, draw=none] (kinkC) {};
+    \draw [<-] (Component) -- (ModelComponent);
+    \draw [<-] (ModelComponent) -- (Model) node[midway, draw=none] (kinkM) {};
+    % The "(node |- node) -|" syntax draws a vertical-horizontal-vertical path.
+    \draw [<-] (ModelComponent) -- (Model |- kinkM) -| (Frame);
+    \draw [<-] (ModelComponent) -- (Model |- kinkM) -| (Joint);
+    \draw [<-] (ModelComponent) -- (Model |- kinkM) -| (Force);
+    \draw [<-] (ModelComponent) -- (Model |- kinkM) -| (Controller);
+    \draw [<-] (ModelComponent) -- (Model |- kinkM) -| (Constraint);
+
+    % Tool.
+    \node (Tool) [abstract, below right=3ex and 4em of Object] {Tool};
+    \node (AbstractTool) [abstract, right=10em of Tool] {AbstractTool};
+
+    \draw [<-] (Object) -- (Component |- kinkC) -| (Tool);
+    \draw [<-] (Object) -- (Component |- kinkC) -| (AbstractTool);
+
+    \begin{scope} [
+            text height=1.5ex, text depth=.25ex,
+        ]
+        \node (InverseKinematicsTool)
+            [below right=of Tool.center]
+            {InverseKinematicsTool};
+        \node (InverseDynamicsTool)
+            [below=of InverseKinematicsTool.west, anchor=west]
+            {InverseDynamicsTool};
+
+        \draw [<-] (Tool) |- (InverseKinematicsTool);
+        \draw [<-] (Tool) |- (InverseDynamicsTool);
+
+        \node (RRATool)
+            [below right=of AbstractTool.center]
+            {RRATool};
+        \node (CMCTool)
+            [below=of RRATool.west, anchor=west]
+            {CMCTool};
+        \node (ForwardTool)
+            [below=of CMCTool.west, anchor=west]
+            {ForwardTool};
+        \node (AnalyzeTool)
+            [below=of ForwardTool.west, anchor=west]
+            {AnalyzeTool};
+
+        \draw [<-] (AbstractTool) |- (RRATool);
+        \draw [<-] (AbstractTool) |- (CMCTool);
+        \draw [<-] (AbstractTool) |- (ForwardTool);
+        \draw [<-] (AbstractTool) |- (AnalyzeTool);
+
+    \end{scope}
+
+
+    % Frame.
+    \begin{scope} [
+            % To properly align nodes based on the text's baseline.
+            text height=1.5ex, text depth=.25ex,
+        ]
+
+        \node (Body)
+            [concrete, below right=of Frame.center]
+            {Body};
+        \node (Ground)
+            [concrete, below=of Body.west, anchor=west]
+            {Ground};
+        \node (PhysicalOffsetFrame)
+            [concrete, below=of Ground.west, anchor=west]
+            {PhysicalOffsetFrame};
+
+        % "|-" means draw a "vertical-then-horizontal" path.
+        \draw [<-] (Frame) |- (Body);
+        \draw [<-] (Frame) |- (Ground);
+        \draw [<-] (Frame) |- (PhysicalOffsetFrame);
+    \end{scope}
+
+    % Joint.
+    \begin{scope} [
+            text height=1.5ex, text depth=.25ex,
+        ]
+
+        \node (PinJoint)
+            [concrete, below right=of Joint.center]
+            {PinJoint};
+        \node (SliderJoint)
+            [concrete, below=of PinJoint.west, anchor=west]
+            {SliderJoint};
+        \node (FreeJoint)
+            [concrete, below=of SliderJoint.west, anchor=west]
+            {FreeJoint};
+        \node (CustomJoint)
+            [concrete, below=of FreeJoint.west, anchor=west]
+            {CustomJoint};
+        \node (WeldJoint)
+            [concrete, below=of CustomJoint.west, anchor=west]
+            {WeldJoint};
+
+        \draw [<-] (Joint) |- (PinJoint);
+        \draw [<-] (Joint) |- (SliderJoint);
+        \draw [<-] (Joint) |- (FreeJoint);
+        \draw [<-] (Joint) |- (CustomJoint);
+        \draw [<-] (Joint) |- (WeldJoint);
+    \end{scope}
+
+    % Force.
+    \begin{scope} [
+            text height=1.5ex, text depth=.25ex,
+        ]
+
+        \node (ExternalForce)
+            [concrete, below right=of Force.center]
+            {ExternalForce};
+        \node (CoordinateLimitForce)
+            [concrete, below=of ExternalForce.west, anchor=west]
+            {CoordinateLimitForce};
+        \node (BushingForce)
+            [concrete, below=of CoordinateLimitForce.west, anchor=west]
+            {BushingForce};
+        \node (HuntCrossleyForce)
+            [concrete, below=of BushingForce.west, anchor=west]
+            {HuntCrossleyForce};
+        \node (Actuator)
+            [abstract, below=16ex of Force]
+            {Actuator};
+
+        \draw [<-] (Force) |- (ExternalForce);
+        \draw [<-] (Force) |- (CoordinateLimitForce);
+        \draw [<-] (Force) |- (BushingForce);
+        \draw [<-] (Force) |- (HuntCrossleyForce);
+        \draw [<-] (Force) -- (Actuator);
+
+        \node (CoordinateActuator)
+            [concrete, below right=of Actuator.center]
+            {CoordinateActuator};
+        \node (TorqueActuator)
+            [concrete, below=of CoordinateActuator.west, anchor=west]
+            {TorqueActuator};
+        \node (PathActuator)
+            [concrete, below=of TorqueActuator.west, anchor=west]
+            {PathActuator};
+
+        \node (Muscle)
+            [abstract, below right=of PathActuator.center]
+            {Muscle};
+        \node (Thelen2003Muscle)
+            [concrete, below right=of Muscle.center]
+            {Thelen2003Muscle};
+        \node (Millard2012EquilibriumMuscle)
+            [concrete, below=of Thelen2003Muscle.west, anchor=west]
+            {Millard2012EquilibriumMuscle};
+
+        \draw [<-] (Actuator) |- (CoordinateActuator);
+        \draw [<-] (Actuator) |- (TorqueActuator);
+        \draw [<-] (Actuator) |- (PathActuator);
+
+        \draw [<-] (PathActuator) |- (Muscle);
+        \draw [<-] (Muscle) |- (Thelen2003Muscle);
+        \draw [<-] (Muscle) |- (Millard2012EquilibriumMuscle);
+
+    \end{scope}
+
+    % Controller.
+    \begin{scope} [
+            text height=1.5ex, text depth=.25ex,
+        ]
+
+        \node (PrescribedController)
+            [concrete, below right=of Controller.center]
+            {PrescribedController};
+        \node (CMC)
+            [concrete, below=of PrescribedController.west, anchor=west]
+            {CMC};
+
+        \draw [<-] (Controller) |- (PrescribedController);
+        \draw [<-] (Controller) |- (CMC);
+    \end{scope}
+
+    % Constraint.
+    \begin{scope} [
+            text height=1.5ex, text depth=.25ex,
+        ]
+
+        \node (WeldConstraint)
+            [concrete, below right=of Constraint.center]
+            {WeldConstraint};
+        \node (PointOnLineConstraint)
+            [concrete, below=of WeldConstraint.west, anchor=west]
+            {PointOnLineConstraint};
+        \node (CoordinateCouplerConstraint)
+            [concrete, below=of PointOnLineConstraint.west, anchor=west]
+            {CoordinateCouplerConstraint};
+
+        \draw [<-] (Constraint) |- (WeldConstraint);
+        \draw [<-] (Constraint) |- (PointOnLineConstraint);
+        \draw [<-] (Constraint) |- (CoordinateCouplerConstraint);
+    \end{scope}
+
+
+\end{tikzpicture}
+
+\end{document}
