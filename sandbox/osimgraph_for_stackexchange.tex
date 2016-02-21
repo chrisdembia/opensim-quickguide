@@ -1,0 +1,150 @@
+\documentclass[tikz]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing}
+\usetikzlibrary{graphs}
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+% TODO \usetikzlibrary{calc}
+% TODO \usetikzlibrary{matrix}
+\usegdlibrary{layered}
+\usegdlibrary{trees}
+\usegdlibrary{force}
+\begin{document}
+
+\tikzstyle{horzvert path}=[to path={-| (\tikztotarget)}]
+\tikzstyle{verthorz path}=[to path={|- (\tikztotarget)}]
+
+\begin{tikzpicture}[
+    ]
+    \graph [
+        %layered layout,
+        %grid placement,
+        grow down sep,
+        %rounded corners
+        %branch right sep
+        ]
+    {
+        Object ->
+        {
+            Component ->
+            ModelComponent ->
+            { [branch right sep, grow right sep] %, chain shift=(-45:1mm)] %grow right sep]
+                Model, %, below=of ModelComponent],
+                Frame -> [verthorz path] %[bend right]
+                { [branch down sep]
+                    TODO [coordinate],
+                    TODO [coordinate],
+                    Body, % [grow right sep], %, xshift=10mm],
+                    Ground,
+                    PhysicalOffsetFrame,
+                },
+                Joint -> [verthorz path]
+                { [branch down sep] % [grow right]  %[branch down sep]% TODO [branch down=5mm]
+                    PinJoint,
+                    SliderJoint,
+                    FreeJoint,
+                    CustomJoint
+                },
+                Force,
+            }
+        }
+    };
+\end{tikzpicture}
+
+%\tikz [rounded corners] \graph [
+%%                                layered layout,
+%                                % TODO branch down=5mm,
+%                                %simple
+%%                                grow right sep,
+%%                                grow down sep,
+%%                                branch right sep
+%                                ]
+%{
+%    Object -> {
+%        Component ->
+%        ModelComponent -> {
+%            Model,
+%            Frame -> { %[branch down sep] %[rotate=90]% TODO [same layer]
+%                Body,
+%                Ground,
+%                PhysicalOffsetFrame
+%            },
+%            Joint -> {% [grow right]  %[branch down sep]% TODO [branch down=5mm]
+%                PinJoint,
+%                SliderJoint,
+%                FreeJoint,
+%                CustomJoint
+%            },
+%        },
+%    }
+%};
+\end{document}
+            Force -> { [branch down sep]
+                BushingForce,
+                CoordinateLimitForce,
+                ExternalForce,
+                HuntCrossleyForce,
+                Actuator -> {
+                    CoordinateActuator,
+                    TorqueActuator,
+                    Muscle -> {
+                        Thelen2003Muscle,
+                        Millard2012EquilibriumMuscle
+                    }
+                }
+            },
+            Controller -> {
+                PrescribedController,
+                CMC
+            }
+        Tool -> {
+            CMCTool
+        },
+\begin{tikzpicture}
+    \graph [spring electrical layout',
+            coarsen,
+            node distance=3cm,
+            component sep=2cm,
+            ]
+    {
+        Object [abstract] ->
+        {
+            Component [abstract] ->
+                ModelComponent [abstract] ->
+                {
+                    Model [concrete],
+                    Frame [abstract] -> 
+                    { 
+                        Body [concrete],
+                        Ground [concrete],
+                        PhysicalOffsetFrame [concrete],
+                    },
+                    Joint [abstract] ->
+                    { 
+                        PinJoint [concrete],
+                        SliderJoint [concrete],
+                        FreeJoint [concrete],
+                        CustomJoint [concrete]
+                    },
+                    Force -> {
+                        BushingForce,
+                        CoordinateLimitForce,
+                        ExternalForce,
+                        HuntCrossleyForce,
+                        Actuator -> {
+                            CoordinateActuator,
+                            TorqueActuator,
+                            Muscle -> {
+                                Thelen2003Muscle,
+                                Millard2012EquilibriumMuscle
+                            }
+                        }
+                    },
+                    Controller -> {
+                        PrescribedController,
+                        CMC
+                    }
+                }
+        }
+    };
+\end{tikzpicture}

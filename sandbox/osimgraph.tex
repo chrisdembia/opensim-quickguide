@@ -1,0 +1,636 @@
+\documentclass[landscape]{letter}
+%\documentclass[tikz]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing}
+\usetikzlibrary{graphs}
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+% TODO \usetikzlibrary{calc}
+% TODO \usetikzlibrary{matrix}
+\usegdlibrary{layered}
+\usegdlibrary{circular}
+\usegdlibrary{trees}
+\usegdlibrary{force}
+\begin{document}
+
+\tikzstyle{abstract}=[
+    font=\itshape
+]
+\tikzstyle{concrete}=[
+]
+\tikzstyle{horzvert path}=[to path={-| (\tikztotarget)}]
+\tikzstyle{verthorz path}=[to path={|- (\tikztotarget)}]
+
+\begin{tikzpicture}[
+    % To vertically align text in the same row:
+    text height=1.5ex, text depth=.25ex,
+    ]
+    \graph [
+        %spring layout,
+%        simple,
+            simple necklace layout,
+        ]
+    {
+        // %[layered layout]
+        {
+            Object [abstract] ->
+            {
+                Component [abstract] ->
+                    ModelComponent [abstract] ->
+                    {
+                        Model [concrete],
+        Frames [draw, circle] // [spring layout]
+        { %[grow right sep, branch down sep]
+            Frame ->
+            {
+                Body [concrete],
+                Ground [concrete],
+                PhysicalOffsetFrame [concrete],
+            }
+        },
+        Joints [draw] // [tree layout]
+        {
+            Joint ->
+            { %[grow right sep, branch down sep]
+                PinJoint [concrete],
+                SliderJoint [concrete],
+                FreeJoint [concrete],
+                CustomJoint [concrete],
+            }
+        },
+        Forces [draw] // [tree layout]
+        {
+            Force ->
+            {
+                BushingForce [concrete],
+                CoordinateLimitForce [concrete],
+                ExternalForce [concrete],
+                HuntCrossleyForce [concrete],
+            }
+        };
+                    }
+            }
+        };
+
+
+    };
+\end{tikzpicture}
+\newpage
+\begin{tikzpicture}[
+    % To vertically align text in the same row:
+    text height=1.5ex, text depth=.25ex,
+    ]
+    \graph [
+        spring layout,
+%        simple,
+%            simple necklace layout,
+        ]
+    {
+        // [layered layout]
+        {
+            Object [abstract] ->
+            {
+                Component [abstract] ->
+                    ModelComponent [abstract] ->
+                    {
+                        Model [concrete],
+                        Frame [abstract],
+                        Joint [abstract],
+                        Force [abstract],
+                    }
+            }
+        };
+
+        // [tree layout]
+        { %[grow right sep, branch down sep]
+            Frame ->
+            {
+                Body [concrete],
+                Ground [concrete],
+                PhysicalOffsetFrame [concrete],
+            }
+        };
+
+        // [tree layout]
+        {
+            Joint ->
+            { %[grow right sep, branch down sep]
+                PinJoint [concrete],
+                SliderJoint [concrete],
+                FreeJoint [concrete],
+                CustomJoint [concrete],
+            }
+        };
+
+        // [tree layout]
+        {
+            Force ->
+            {
+                BushingForce [concrete],
+                CoordinateLimitForce [concrete],
+                ExternalForce [concrete],
+                HuntCrossleyForce [concrete],
+            }
+        };
+
+    };
+\end{tikzpicture}
+\newpage
+\begin{tikzpicture}[
+    % To vertically align text in the same row:
+    text height=1.5ex, text depth=.25ex,
+    ]
+    \graph [
+%        layered layout,
+        ]
+    {
+        // [layered layout]
+        {
+            Object [abstract] ->
+            {
+                Component [abstract] ->
+                    ModelComponent [abstract] ->
+                    {
+                        Model [concrete],
+                        Frame [abstract],
+                        Joint [abstract],
+                        Force [abstract],
+                    }
+            }
+        };
+
+        // %[tree layout]
+        { %[grow right sep, branch down sep]
+            Frame ->
+            {
+                Body [concrete],
+                Ground [concrete],
+                PhysicalOffsetFrame [concrete],
+            }
+        };
+
+        // 
+        {
+            Joint ->
+            { %[grow right sep, branch down sep]
+                PinJoint [concrete],
+                SliderJoint [concrete],
+                FreeJoint [concrete],
+                CustomJoint [concrete],
+            }
+        };
+
+        // 
+        {
+            Force ->
+            {
+                BushingForce [concrete],
+                CoordinateLimitForce [concrete],
+                ExternalForce [concrete],
+                HuntCrossleyForce [concrete],
+            }
+        };
+
+    };
+\end{tikzpicture}
+\newpage
+\begin{tikzpicture}[
+    % To vertically align text in the same row:
+    text height=1.5ex, text depth=.25ex,
+    ]
+    \graph [
+        layered layout,
+        ]
+    {
+        // %[layered layout]
+        {
+            Object [abstract] ->
+            {
+                Component [abstract] ->
+                    ModelComponent [abstract] ->
+                    {
+                        Model [concrete],
+                        Frame [abstract],
+                        Joint [abstract],
+                        Force [abstract],
+                    }
+            }
+        };
+
+        Frames [draw, rectangle] // %[tree layout]
+        { %[grow right sep, branch down sep]
+            Frame ->
+            {
+                Body [concrete],
+                Ground [concrete],
+                PhysicalOffsetFrame [concrete],
+            }
+        };
+
+%        // 
+%        {[grow right sep, branch down sep]
+%            Joint [grow right sep, branch down sep]->
+%            {[grow right sep, branch down sep]
+%                PinJoint [concrete],
+%                SliderJoint [concrete],
+%                FreeJoint [concrete],
+%                CustomJoint [concrete],
+%            }
+%        };
+%
+%        // 
+%        {[grow right sep, branch down sep]
+%            Force [grow right sep, branch down sep]->
+%            {[grow right sep, branch down sep]
+%                BushingForce [concrete],
+%                CoordinateLimitForce [concrete],
+%                ExternalForce [concrete],
+%                HuntCrossleyForce [concrete],
+%            }
+%        };
+
+    };
+\end{tikzpicture}
+\newpage
+\begin{tikzpicture}[
+    ]
+    \graph [
+        layered layout
+        ]
+    {
+        Object [abstract] ->
+        {
+            Component [abstract] ->
+            ModelComponent [abstract] ->
+            {
+                Model [concrete],
+                Frame [abstract],
+                Joint [abstract],
+                Force [abstract],
+            }
+        }
+    };
+\end{tikzpicture}
+\newpage
+\begin{tikzpicture}[
+    ]
+    \graph 
+    {
+        // [layered layout]
+        {
+            Object [abstract] ->
+            { [grow down sep]
+                Component [abstract] ->
+                    ModelComponent [abstract]
+            };
+        };
+
+        // [ grow right sep, branch down sep=0.5em, ]
+        {
+            ModelComponent [abstract] -> [verthorz path]
+            { 
+                Model [concrete],
+                Frame [abstract] -> [verthorz path]
+                { 
+                    Body [concrete],
+                    Ground [concrete],
+                    PhysicalOffsetFrame [concrete],
+                },
+                Joint [abstract] -> [verthorz path]
+                {
+                    PinJoint [concrete],
+                    SliderJoint [concrete],
+                    FreeJoint [concrete],
+                    CustomJoint [concrete]
+                },
+                Force [abstract] -> [verthorz path] 
+                {
+                    BushingForce [concrete],
+                    CoordinateLimitForce [concrete],
+                    ExternalForce [concrete],
+                    HuntCrossleyForce [concrete],
+                    Actuator [abstract] -> [verthorz path]
+                    {
+                        CoordinateActuator [concrete],
+                        TorqueActuator [concrete],
+                        Muscle [abstract] -> [verthorz path]
+                        {
+                            Thelen2003Muscle [concrete],
+                            Millard2012EquilibriumMuscle [concrete]
+                        }
+                    }
+                },
+            };
+        };
+    };
+\end{tikzpicture}
+\newpage
+\begin{tikzpicture}[
+    ]
+    \graph [
+        grow right sep,
+        branch down sep=0.5em,
+        ]
+    {
+        Object [abstract] ->
+        {
+            Component [abstract] ->
+            ModelComponent [abstract] -> [verthorz path]
+            {
+                Model [concrete],
+                Frame [abstract] -> [verthorz path]
+                { 
+                    Body [concrete],
+                    Ground [concrete],
+                    PhysicalOffsetFrame [concrete],
+                },
+                Joint [abstract] -> [verthorz path]
+                {
+                    PinJoint [concrete],
+                    SliderJoint [concrete],
+                    FreeJoint [concrete],
+                    CustomJoint [concrete]
+                },
+                Force [abstract] -> [verthorz path] 
+                {
+                    BushingForce [concrete],
+                    CoordinateLimitForce [concrete],
+                    ExternalForce [concrete],
+                    HuntCrossleyForce [concrete],
+                    Actuator [abstract] -> [verthorz path]
+                    {
+                        CoordinateActuator [concrete],
+                        TorqueActuator [concrete],
+                        Muscle [abstract] -> [verthorz path]
+                        {
+                            Thelen2003Muscle [concrete],
+                            Millard2012EquilibriumMuscle [concrete]
+                        }
+                    }
+                },
+            }
+        }
+    };
+\end{tikzpicture}
+\begin{tikzpicture}
+    \graph [grow right=7mm, branch down=7mm]
+    {
+        q -> 
+        {
+            a ->
+            {
+                z,
+                w,
+                x,
+            },
+            b ->
+            {
+                c,
+                d,
+                e
+            }
+        }
+    };
+\end{tikzpicture}
+\begin{tikzpicture}
+\graph [spring layout] % [tree layout] %, layered layout,grow=down]
+{
+    // [layered layout]
+    {
+        a ->
+        b ->
+        {
+            c,
+            d,
+        }
+    };
+
+    // %[layered layout] %orient=right]%[layered layout]  %[spring layout]
+    {
+        c -> %[grow right sep ,branch down sep]
+        { %[grow right, branch down]
+            e,
+            f,
+            g,
+        }
+    };
+
+    // [layered layout] %, grow=right]
+    {
+        d %->
+        %{ [branch down]
+        %    h,
+        %    i,
+        %}
+    };
+};
+\end{tikzpicture}
+\begin{tikzpicture}
+\graph [layered layout] %tree layout]
+%\graph [layered layout, component direction=10] %tree layout]
+% ALSO components go right top aligned
+{
+    a [grow=down] ->
+    b -> [grow=right]
+    { [grow=right]
+        c [grow=right] ->
+        {
+            e,
+            f,
+            g
+        },
+        d ->
+        {
+            h,
+            i
+        }
+    }
+};
+\end{tikzpicture}
+%\begin{tikzpicture}[
+%% TODO     node distance=5mm,
+%    ]
+%    \graph [
+%        layered layout,
+%        %grid placement,
+%%        grow down sep,
+%%        branch right sep,
+%        ]
+%    {
+%%        Ruhroh [draw, circle]//[spring layout]
+%%        {
+%            Object [abstract] ->
+%            {
+%                Component [abstract] ->
+%                ModelComponent [abstract] ->
+%                {
+%                    Model [concrete],
+%                    Frame ->%[draw, circle]//[spring layout]
+%                    { [spring electrical layout]
+%                        Body [concrete],
+%                        Ground [concrete],
+%                        PhysicalOffsetFrame [concrete],
+%                    },
+%                    Force [abstract],
+%                }
+%            }
+%%        }
+%    };
+%\end{tikzpicture}
+
+why hello there?
+
+\begin{tikzpicture}[
+    rounded corners,
+% TODO     node distance=5mm,
+    ]
+    %\draw node (A) [abstract] {unsigned integer};
+%    \node (A) {YO};
+%    \node (B) [right=of A] {HA};
+
+%    \matrix [matrix of nodes] {
+%        Model \\
+%        Component \\
+%        ModelComponent \\
+%        Model & Frame & Joint & Force & Controller \\
+%    };
+    \graph [
+        %layered layout,
+        %grid placement,
+        grow down sep,
+        %rounded corners
+        %branch right sep
+        ]
+    {
+        Object [abstract] ->
+        {
+            Component [abstract] ->
+            ModelComponent [abstract] ->
+            { [branch right sep]
+                Model [concrete], %, below=of ModelComponent],
+                %(A)
+                Frame [abstract] -> [verthorz path] %[bend right]
+                { [branch down sep, grow right=100mm]
+                    Body [concrete], %, xshift=10mm],
+                    Ground [concrete],
+                    PhysicalOffsetFrame [concrete],
+                },
+                Joint [abstract, xshift=10mm, grow right=100mm] ->
+                { [branch down] % [grow right]  %[branch down sep]% TODO [branch down=5mm]
+                    PinJoint [concrete],
+                    SliderJoint [concrete],
+                    FreeJoint [concrete],
+                    CustomJoint [concrete]
+                },
+                Force [abstract],
+            }
+        }
+    };
+\end{tikzpicture}
+
+%\tikz [rounded corners] \graph [
+%%                                layered layout,
+%                                % TODO branch down=5mm,
+%                                %simple
+%%                                grow right sep,
+%%                                grow down sep,
+%%                                branch right sep
+%                                ]
+%{
+%    Object -> {
+%        Component ->
+%        ModelComponent -> {
+%            Model,
+%            Frame -> { %[branch down sep] %[rotate=90]% TODO [same layer]
+%                Body,
+%                Ground,
+%                PhysicalOffsetFrame
+%            },
+%            Joint -> {% [grow right]  %[branch down sep]% TODO [branch down=5mm]
+%                PinJoint,
+%                SliderJoint,
+%                FreeJoint,
+%                CustomJoint
+%            },
+%        },
+%    }
+%};
+\end{document}
+            Force -> { [branch down sep]
+                BushingForce,
+                CoordinateLimitForce,
+                ExternalForce,
+                HuntCrossleyForce,
+                Actuator -> {
+                    CoordinateActuator,
+                    TorqueActuator,
+                    Muscle -> {
+                        Thelen2003Muscle,
+                        Millard2012EquilibriumMuscle
+                    }
+                }
+            },
+            Controller -> {
+                PrescribedController,
+                CMC
+            }
+        Tool -> {
+            CMCTool
+        },
+\begin{tikzpicture}
+    \graph [spring electrical layout',
+            coarsen,
+            node distance=3cm,
+            component sep=2cm,
+            ]
+    {
+        Object [abstract] ->
+        {
+            Component [abstract] ->
+                ModelComponent [abstract] ->
+                {
+                    Model [concrete],
+                    Frame [abstract] -> 
+                    { 
+                        Body [concrete],
+                        Ground [concrete],
+                        PhysicalOffsetFrame [concrete],
+                    },
+                    Joint [abstract] ->
+                    { 
+                        PinJoint [concrete],
+                        SliderJoint [concrete],
+                        FreeJoint [concrete],
+                        CustomJoint [concrete]
+                    },
+                    Force -> {
+                        BushingForce,
+                        CoordinateLimitForce,
+                        ExternalForce,
+                        HuntCrossleyForce,
+                        Actuator -> {
+                            CoordinateActuator,
+                            TorqueActuator,
+                            Muscle -> {
+                                Thelen2003Muscle,
+                                Millard2012EquilibriumMuscle
+                            }
+                        }
+                    },
+                    Controller -> {
+                        PrescribedController,
+                        CMC
+                    }
+                }
+        }
+    };
+\end{tikzpicture}
+\begin{tikzpicture}
+\node {a}
+    [grow=down]
+    child {node {b}}
+    child {node {c}}
+    child {node {d}} {[grow=right] 
+        child {node {e}} child {node {f}}  child
+    };
+\end{tikzpicture}

@@ -1,0 +1,47 @@
+\documentclass[tikz,margin=5mm]{standalone}
+\usepackage{fixltx2e}
+\usepackage{amsmath}
+\def\SP#1{\textsuperscript{#1}}
+\def\SB#1{\textsubscript{#1}}
+\def\SPSB#1#2{\rlap{\textsuperscript{#1}\textsubscript{#2}}}
+
+\usepackage{tikz}
+\usetikzlibrary{graphs,graphdrawing,arrows}
+\usetikzlibrary{decorations.pathmorphing}
+\usegdlibrary{force, layered, trees}
+
+\begin{document}
+\tikz\graph [layered layout, nodes=draw]
+  {
+    RacOn/"\textbf{Rac\SB{on}}";
+    kRacOnToOffM/"${k^{{Rac}}_{{on}\rightarrow{off}}}$";
+    kRacOffMtoOn/"${k^{{Rac}}_{{on}\leftarrow{off}}}$";
+%
+    RacYO [draw, circle]//[spring layout]
+      {
+        RacOn ->[very thick, bend right, orient = 90]
+        kRacOffMtoOn ->[decorate, decoration=snake, blue, orient = 90]
+        RacOn ->[decorate, decoration=snake, red, orient = 90]
+        kRacOnToOffM
+      };
+%
+    RhoOn/"\textbf{Rho\SB{on}}";
+    kRhoOnToOffM/"${k^{{Rho}}_{{on}\rightarrow{off}}}$";
+    kRhoOffMtoOn/"${k^{{Rho}}_{{on}\leftarrow{off}}}$";
+%
+    Rho [draw, circle]//[spring layout]
+      {
+        kRhoOffMtoOn ->[decorate, decoration=snake, blue]
+        RhoOn ->[decorate, decoration=snake, red]
+        kRhoOnToOffM
+      };
+%
+    chemorepellant ->[very thick,bend right=30] kRhoOffMtoOn;
+    chemoattractant ->[very thick] kRacOffMtoOn;
+    contact ->[very thick, bend right] kRhoOffMtoOn;
+    RhoOn ->[very thick,bend right=70] memRetraction/"membrane retraction"
+      ->[>=|, very thick, bend right=10] memTension/"membrane tension";
+    RacOn ->[very thick, bend right=90] memProtrusion/"membrane protrusion"
+      ->[very thick] memTension ->[very thick,bend right=65] kRacOnToOffM;
+  };
+\end{document}
