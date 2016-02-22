@@ -1,0 +1,101 @@
+\documentclass[tikz]{standalone}
+% Use the Helvetica font as the sans-serif font.
+\usepackage{helvet} % [scaled]?
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing}
+\usetikzlibrary{graphs}
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+% TODO \usetikzlibrary{calc}
+% TODO \usetikzlibrary{matrix}
+\usegdlibrary{layered}
+\usegdlibrary{circular}
+\usegdlibrary{trees}
+\usegdlibrary{force}
+\begin{document}
+
+% Use sans-serif font by default.
+\renewcommand*\familydefault{\sfdefault}
+
+% Use 8pt sans-serif font in tikzpictures.
+% TODO instead of 8pt, use scaling.
+\newcommand{\fontstyle}{\fontsize{8pt}{12}\selectfont\sffamily}
+\tikzstyle{every picture}+=[font=\fontstyle]
+
+\newcommand{\drawframe}[3]{
+    \begin{scope}[shift={#2}, rotate=#3]
+        \coordinate (#1Origin) at (0, 0);
+        \coordinate (#1Top) at (0, 1);
+        \draw[->] (0, 0) -- (1, 0);
+        \draw[->] (0, 0) -- (0, 1);
+        \draw[shift={(0.3, 0)}, rotate=45] (0, 0) -- (-0.1, 0);
+        \draw[shift={(0.4, 0)}, rotate=45] (0, 0) -- (-0.1, 0);
+        \draw[shift={(0.5, 0)}, rotate=45] (0, 0) -- (-0.1, 0);
+        \draw[shift={(0.6, 0)}, rotate=45] (0, 0) -- (-0.1, 0);
+        %\draw[rotate=45] (0, 0) -- (-0.1, 0);
+        %\draw[shift={(0, 0.1)}, rotate=45] (0, 0) -- (-0.1, 0);
+        %\draw[shift={(0, 0.2)}, rotate=45] (0, 0) -- (-0.1, 0);
+        %\draw[shift={(0, 0.3)}, rotate=45] (0, 0) -- (-0.1, 0);
+        %\draw[shift={(0, 0.4)}, rotate=45] (0, 0) -- (-0.1, 0);
+    \end{scope}
+}
+
+\begin{tikzpicture}[
+        scale=1.2,
+    ]
+
+    %\draw (0, 0) -- (4, 0);
+
+    \drawframe{Ground}{(0,  0)}{0}
+
+    \node at (GroundOrigin) [anchor=south west] {Ground};
+
+    \coordinate (origin) at (0, 0);
+    % TODO \node at (origin) [anchor=south west] {origin};
+
+
+    \begin{scope} [shift={(1.5, 2.2)}, rotate=20]
+        \draw [line width=1.2, fill=green] (0, 0) ellipse (2 and 1);
+
+        \drawframe{ParentBody}{(-1.2, -0.3)}{-10}
+
+        \node at (ParentBodyOrigin) [anchor=east] {Body};
+        \draw [<->, >=latex, dotted] (origin) -- (ParentBodyOrigin)
+            node [midway, anchor=north west] {Joint};
+
+        \drawframe{ParentMid}{(-0.1, 0.5)}{8}
+        \node at (ParentMidTop) [anchor=south east] {PhysicalOffsetFrame};
+        \draw [<-, >=latex, dashed] (ParentBodyOrigin) -- (ParentMidOrigin)
+            node [midway, anchor=west] {fixed};
+
+        \drawframe{ParentFrame}{(1.0, 0)}{-45}
+        \node at (ParentFrameTop) % Coordinate defined by \drawframe.
+            [anchor=south] {PhysicalOffsetFrame};
+        \draw [<-, >=latex, dashed] (ParentMidOrigin) -- (ParentFrameOrigin);
+
+    \end{scope}
+
+    \begin{scope} [shift={(5.5, 2.2)}, rotate=-40]
+        \draw [line width=1.2, fill=green] (0, 0) ellipse (2 and 1);
+
+        \drawframe{ChildBody}{(0.6, -0.25)}{15}
+        \node at (ChildBodyOrigin) [anchor=west] {Body};
+
+        \drawframe{ChildFrame}{(-1.2, -0.4)}{30}
+        \node at (ChildFrameTop) % Coordinate defined by \drawframe.
+            [anchor=south west] {PhysicalOffsetFrame};
+
+        \draw [<-, >=latex, dashed] (ChildBodyOrigin) -- (ChildFrameOrigin)
+            node [midway, anchor=north east] {fixed};
+        \draw [<->, >=latex, dotted] (ParentFrameOrigin) -- (ChildFrameOrigin)
+            node [midway, anchor=north west] {Joint};
+
+    \end{scope}
+\end{tikzpicture}
+
+\end{document}
+
+
+
+
