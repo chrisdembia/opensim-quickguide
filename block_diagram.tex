@@ -29,36 +29,85 @@
 \begin{tikzpicture}[
     ]
 
-    \node (ground) [draw] {Ground};
+    \node (ground) [draw] {Ground "ground"};
 
     \node (j1n) [below=of ground] {Joint "j1"};
-    \node (c1) [draw, below=of j1n, inner sep=2em] {Coordinate "c1"};
-    \node (j1) [draw, fit={(j1n) (c1)}] {};
-    \node (c1v) [draw, signal, signal to=east, fill=white] at (c1.east) {value};
+    \node (c1) [draw, below of=j1n, inner ysep=1em, inner xsep=2em]
+    {Coordinate "c1"};
+    \node (j1) [draw, fit={(j1n) (c1)}, inner sep=0.5em] {};
+    \node (c1v) [draw, signal, signal to=east, fill=white] at (c1.east)
+    {value};
 
     \node (body1) [draw, below=of j1] {Body "b1"};
 
     \node (j2n) [below=of body1] {Joint "j2"};
-    \node (c2) [draw, below=of j2n, inner sep=2em] {Coordinate "c2"};
-    \node (j2) [draw, fit={(j2n) (c2)}] {};
-    \node (c2v) [draw, signal, signal to=east, fill=white] at (c2.east) {value};
+    \node (c2) [draw, below of=j2n, inner ysep=1em, inner xsep=2em]
+    {Coordinate "c2"};
+    \node (j2) [draw, fit={(j2n) (c2)}, inner sep=0.5em] {};
+    \node (c2v) [draw, signal, signal to=east, fill=white] at (c2.east)
+    {value};
 
-    \node (body2) [draw, below=of j2, inner sep=2em] {Body "b2"};
+    \node (body2) [draw, below=of j2] {Body "b2"};
 
+    % Actuator.
+    \node (actu1) [draw, left=of c1, inner ysep=1em, inner xsep=2em]
+    {CoordinateActuator "ca1"};
+    \draw (actu1.east) -- (c1.west);
+    \node (actu1conn)
+    [draw, rounded rectangle, rounded rectangle east
+    arc=concave, rounded rectangle west arc=none, fill=white] at (actu1.east)
+    {coord};
+    \node (actu1in)
+    [draw, signal, signal from=west, signal to=nowhere, fill=white]
+    at (actu1.west) {control};
+    
+    \node (actu2) [draw, left=of c2, inner ysep=1em, inner xsep=2em]
+    {CoordinateActuator "ca2"};
+    \draw (actu2.east) -- (c2.west);
+    \node (actu2conn)
+    [draw, rounded rectangle, rounded rectangle east
+    arc=concave, rounded rectangle west arc=none, fill=white] at (actu2.east)
+    {coord};
+    \node (actu2in)
+    [draw, signal, signal from=west, signal to=nowhere, fill=white]
+    at (actu2.west) {control};
+
+    \node (contr) [draw, left=25em of body1, inner ysep=2em, inner xsep=2em]
+    {FeedbackController "fbc"};
+    \node (contrin)
+    [draw, signal, signal from=west, signal to=nowhere, fill=white]
+    at (contr.west) {desired};
+    \matrix at (contr.east) {
+        \node (controut1) [draw, signal, signal to=east, fill=white]
+            {u1}; \\
+        \node (controut2) [draw, signal, signal to=east, fill=white]
+            {u2}; \\
+    };
+
+    \draw (controut1.east) to[out=0, in=180] (actu1in.west);
+    \draw (controut2.east) to[out=0, in=180] (actu2in.west);
+
+    % Data source.
+    \node (datasrc) [draw, left=5em of contr, inner ysep=1em, inner xsep=2em]
+    {DataSource "traj"};
+    \node (datasrcout) [draw, signal, signal to=east, fill=white]
+    at (datasrc.east) {output};
+
+    \draw (datasrcout.east) -- (contrin.west);
 
     % Reporter.
-    \node (rep) [draw, right=10em of j1, inner sep=2em] {FileReporter};
+    \node (rep) [draw, right=10em of body1, inner sep=2em] {FileReporter};
 
     % Reporter inputs.
     \matrix at (rep.west) {
         % TODO make this a "multi input"
-            \node (repin0) [draw, signal, signal from=west, signal to=nowhere,
-                fill=white]
-                {input}; \\
-            \node (repin1) [draw, signal, signal from=west, signal to=nowhere,
-                fill=white,
-                ]
-                {input}; \\
+        \node (repin0) [draw, signal, signal from=west, signal to=nowhere,
+            fill=white]
+            {input}; \\
+        \node (repin1) [draw, signal, signal from=west, signal to=nowhere,
+            fill=white,
+            ]
+            {input}; \\
     };
 
     % The to[out, in] creates a curved path; the 0 and 180 are angles.
