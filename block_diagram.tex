@@ -1,0 +1,123 @@
+\documentclass[tikz]{standalone}
+% Use the Helvetica font as the sans-serif font.
+\usepackage{helvet} % [scaled]?
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing}
+\usetikzlibrary{graphs}
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+\usetikzlibrary{fit}
+\usetikzlibrary{shapes.symbols}
+\usetikzlibrary{shapes.misc}
+% TODO \usetikzlibrary{calc}
+% TODO \usetikzlibrary{matrix}
+\usegdlibrary{layered}
+\usegdlibrary{circular}
+\usegdlibrary{trees}
+\usegdlibrary{force}
+\begin{document}
+
+% Use sans-serif font by default.
+\renewcommand*\familydefault{\sfdefault}
+
+% Use 8pt sans-serif font in tikzpictures.
+% TODO instead of 8pt, use scaling.
+\newcommand{\fontstyle}{\fontsize{8pt}{12}\selectfont\sffamily}
+\tikzstyle{every picture}+=[font=\fontstyle]
+
+\begin{tikzpicture}[
+    ]
+
+    \node (ground) [draw] {Ground};
+
+    \node (j1n) [below=of ground] {Joint "j1"};
+    \node (c1) [draw, below=of j1n, inner sep=2em] {Coordinate "c1"};
+    \node (j1) [draw, fit={(j1n) (c1)}] {};
+    \node (c1v) [draw, signal, signal to=east, fill=white] at (c1.east) {value};
+
+    \node (body1) [draw, below=of j1] {Body "b1"};
+
+    \node (j2n) [below=of body1] {Joint "j2"};
+    \node (c2) [draw, below=of j2n, inner sep=2em] {Coordinate "c2"};
+    \node (j2) [draw, fit={(j2n) (c2)}] {};
+    \node (c2v) [draw, signal, signal to=east, fill=white] at (c2.east) {value};
+
+    \node (body2) [draw, below=of j2, inner sep=2em] {Body "b2"};
+
+
+    % Reporter.
+    \node (rep) [draw, right=10em of j1, inner sep=2em] {FileReporter};
+
+    % Reporter inputs.
+    \matrix at (rep.west) {
+        % TODO make this a "multi input"
+            \node (repin0) [draw, signal, signal from=west, signal to=nowhere,
+                fill=white]
+                {input}; \\
+            \node (repin1) [draw, signal, signal from=west, signal to=nowhere,
+                fill=white,
+                ]
+                {input}; \\
+    };
+
+    \draw (c1v.east) -- (repin0.west);
+    \draw (c2v.east) -- (repin1.west);
+
+    \draw (ground.south) -- (j1.north);
+    \draw (body1.north) -- (j1.south);
+
+    \draw (body1.south) -- (j2.north);
+    \draw (body2.north) -- (j2.south);
+    
+    \node (j1A) [draw, rotate=90, rounded rectangle, rounded rectangle west
+    arc=concave, rounded rectangle east arc=none, fill=white] at (j1.south)
+    {B};
+    
+    \node (j1B) [draw, rotate=-90, rounded rectangle, rounded rectangle west
+    arc=concave, rounded rectangle east arc=none, fill=white] at (j1.north)
+    {A};
+    
+    \node (j2A) [draw, rotate=90, rounded rectangle, rounded rectangle west
+    arc=concave, rounded rectangle east arc=none, fill=white] at (j2.south)
+    {B};
+    
+    \node (j2B) [draw, rotate=-90, rounded rectangle, rounded rectangle west
+    arc=concave, rounded rectangle east arc=none, fill=white] at (j2.north)
+    {A};
+
+
+%    \node (c1) [draw, below=of ground] {Coordinate "c1"};
+%    \node (j1) [draw, fit=(c1)] {Joint "j1"};
+%    \node (j2) [draw, below=of j1] {Joint "j2"};
+
+%    \node [draw, signal, signal from=west, signal to=nowhere] at (0, 0) {input};
+%
+%%    \node [draw, signal, signal from=south, signal to=nowhere] at (2, -2) {connector};
+%
+%    \node [draw, rotate=90, rounded rectangle, rounded rectangle west
+%    arc=concave, rounded rectangle east arc=none] at (2, -2)
+%    {connector};
+%    \node [draw, rotate=90, rounded rectangle, rounded rectangle west
+%    arc=concave, rounded rectangle east arc=none] at (2, -2)
+%    {\rotatebox{-90}{connector}};
+
+\end{tikzpicture}
+
+\end{document}
+
+
+
+
+%    \node (repins) at (rep.west) {
+%        \tikz{
+%            \node (repin0) [draw, signal, signal from=west, signal to=nowhere,
+%                fill=white]
+%                at (rep.west) {input};
+%            \node (repin1) [draw, signal, signal from=west, signal to=nowhere,
+%                fill=white,
+%                below=1ex of repin0]
+%                {input};
+%        }
+%    };
+
