@@ -1,0 +1,86 @@
+\documentclass[tikz]{standalone}
+% Use the Helvetica font as the sans-serif font.
+\usepackage{helvet} % [scaled]?
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing}
+\usetikzlibrary{graphs}
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+% TODO \usetikzlibrary{calc}
+% TODO \usetikzlibrary{matrix}
+\usegdlibrary{layered}
+\usegdlibrary{circular}
+\usegdlibrary{trees}
+\usegdlibrary{force}
+\begin{document}
+
+% Use sans-serif font by default.
+\renewcommand*\familydefault{\sfdefault}
+
+% Use 8pt sans-serif font in tikzpictures.
+% TODO instead of 8pt, use scaling.
+\newcommand{\fontstyle}{\fontsize{8pt}{12}\selectfont\sffamily}
+\tikzstyle{every picture}+=[font=\fontstyle]
+
+\begin{tikzpicture}[
+    ]
+    \node (component) at (0, 0) [
+        draw,
+        thick,
+        minimum width=18em,
+        minimum height=25ex,
+        rounded corners,
+        ] {};
+    \node [below] at (component.north) {
+        \textbf{Component}
+    };
+
+     \node (property) at (0, 0) [
+         draw,
+         minimum width=6em,
+         minimum height=9ex,
+         text width=6em,
+         ] {
+         options, constant modeling parameters; saved to XML
+    };
+    \node [below, align=center] at (property.north) {
+        \textbf{Properties} \\
+    };
+
+    \node (input) at (component.west) [
+        draw,
+        minimum width=6em,
+        minimum height=9ex,
+        text width=6em,
+        ] {
+        a socket for numerical quantities used to compute outputs or for
+        reporting
+    };
+
+    \node (output) at (component.east) [
+        draw,
+        minimum width=6em,
+        minimum height=9ex,
+        text width=6em,
+        ] {
+        calculations provided by the component; can be wired
+        to other components' inputs
+    };
+
+    \node (connector) at (component.south) [
+        draw,
+        minimum width=6em,
+        minimum height=9ex,
+        text width=6em,
+        ] {
+        a socket for another component that this one depends on
+    };
+
+\end{tikzpicture}
+
+\end{document}
+
+
+
+
