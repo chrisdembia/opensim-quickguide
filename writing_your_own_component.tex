@@ -1,0 +1,91 @@
+\documentclass[tikz]{standalone}
+% Use the Helvetica font as the sans-serif font.
+%\usepackage{helvet} % [scaled]?
+%\usepackage[T1]{fontenc}
+%\usepackage[charter]{mathdesign}
+%\def\ttdefault{blg}
+\usepackage{inconsolata}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{listings}
+\begin{document}
+
+\lstset{basicstyle=\ttfamily}
+
+% Use sans-serif font by default.
+% TODO \renewcommand*\familydefault{\sfdefault}
+
+% Use 8pt sans-serif font in tikzpictures.
+% TODO instead of 8pt, use scaling.
+% TODO \newcommand{\fontstyle}{\fontsize{8pt}{12}\selectfont\sffamily}
+% TODO \tikzstyle{every picture}+=[font=\fontstyle]
+
+\newcommand\tikzmark[2]{
+    \tikz[remember picture, overlay]\node (#1) {};
+}
+
+\begin{tikzpicture}%[remember picture, overlay]
+\node (classdeclare) [draw] {
+\begin{lstlisting}[language=c++, escapechar=!]
+class MyComponent : public OpenSim::ModelComponent {
+    OpenSim_DECLARE_CONCRETE_OBJECT(MyComponent, OpenSim::Component);
+public:
+    OpenSim_DECLARE_PROPERTY(name, T, comment);
+    OpenSim_DECLARE_UNNAMED_PROPERTY(name, T, comment);
+    OpenSim_DECLARE_OPTIONAL_PROPERTY(name, T, comment);
+    OpenSim_DECLARE_LIST_PROPERTY(name, T, comment);
+    OpenSim_DECLARE_LIST_PROPERTY_SIZE(name, T, size, comment);
+    OpenSim_DECLARE_LIST_PROPERTY_ATLEAST(name, T, minSize, comment);
+    OpenSim_DECLARE_LIST_PROPERTY_ATMOST(name, T, maxSize, comment);
+    OpenSim_DECLARE_LIST_PROPERTY_RANGE(name, T, minSize, maxSize, comment);
+
+    OpenSim_DECLARE_CONNECTOR(name, T, comment);
+
+    OpenSim_DECLARE_OUTPUT(name, T, function, dependsOnStage);
+    OpenSim_DECLARE_LIST_OUTPUT(name, T, function, dependsOnStage);
+    OpenSim_DECLARE_OUTPUT_FOR_STATE_VARIABLE(stateVarName);
+
+    OpenSim_DECLARE_INPUT(name, T, requiredAtStage, comment);
+    OpenSim_DECLARE_LIST_INPUT(name, T, requiredAtStage, comment);
+protected:
+    !\tikzmark{A}{A}!void extendFinalizeFromProperties() override;
+    void extendConnectToModel(Model&) override;
+    void extendAddToSystem(SimTK::MultibodySystem& sys) const override {
+        Super::extendAddToSystem(sys);
+        addStateVariable("activation");
+    }
+    void extendInitStateFromProperties(SimTK::State&) const override;
+    // TODO
+    void computeStateVariableDerivatives(const SimTK::State&) const override;
+
+    // Set default state value properties to use the values in the state.
+    void extendSetPropertiesFromState(const SimTK::State&) const override;
+};
+\end{lstlisting}
+};
+\node [draw, left=of classdeclare.north west,
+        anchor=north east, text width=20em, align=left] (anno) {
+     SimTK::State initSystem() { TODO use tikzmark
+         finalizeFromProperties();
+         connect();
+         createMultibodySystem(); addToSystem();
+         initializeState(); initStateFromProperties();
+     }
+     hello \newline
+     x \newline
+     x  \newline 
+     x  \newline
+     x \newline
+     \newline
+     \newline
+     \newline
+     x  \newline
+};
+\draw (anno) -- (A);
+\end{tikzpicture}
+
+\end{document}
+
+
+
+
