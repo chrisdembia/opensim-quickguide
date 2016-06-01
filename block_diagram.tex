@@ -31,27 +31,27 @@
 
     \node (ground) [draw] {Ground "ground"};
 
-    \node (j1n) [below=of ground] {Joint "j1"};
+    \node (j1n) [below=6ex of ground] {Joint "j1"};
     \node (c1) [draw, below of=j1n, inner ysep=1em, inner xsep=2em]
     {Coordinate "c1"};
     \node (j1) [draw, fit={(j1n) (c1)}, inner sep=0.5em] {};
     \node (c1v) [draw, signal, signal to=east, fill=white] at (c1.east)
     {value};
 
-    \node (body1) [draw, below=of j1] {Body "b1"};
+    \node (body1) [draw, below=4ex of j1] {Body "b1"};
 
-    \node (j2n) [below=of body1] {Joint "j2"};
+    \node (j2n) [below=5ex of body1] {Joint "j2"};
     \node (c2) [draw, below of=j2n, inner ysep=1em, inner xsep=2em]
     {Coordinate "c2"};
     \node (j2) [draw, fit={(j2n) (c2)}, inner sep=0.5em] {};
     \node (c2v) [draw, signal, signal to=east, fill=white] at (c2.east)
     {value};
 
-    \node (body2) [draw, below=of j2] {Body "b2"};
+    \node (body2) [draw, below=4ex of j2] {Body "b2"};
 
     % Actuator.
-    \node (actu1) [draw, left=of c1, inner ysep=1em, inner xsep=2em]
-    {CoordinateActuator "ca1"};
+    \node (actu1) [draw, align=center, left=of c1, inner ysep=1em, inner xsep=2em]
+    {CoordinateActuator\\"ca1"};
     \draw (actu1.east) -- (c1.west);
     \node (actu1conn)
     [draw, rounded rectangle, rounded rectangle east
@@ -61,8 +61,8 @@
     [draw, signal, signal from=west, signal to=nowhere, fill=white]
     at (actu1.west) {control};
     
-    \node (actu2) [draw, left=of c2, inner ysep=1em, inner xsep=2em]
-    {CoordinateActuator "ca2"};
+    \node (actu2) [draw, align=center, left=of c2, inner ysep=1em, inner xsep=2em]
+    {CoordinateActuator\\"ca2"};
     \draw (actu2.east) -- (c2.west);
     \node (actu2conn)
     [draw, rounded rectangle, rounded rectangle east
@@ -72,8 +72,8 @@
     [draw, signal, signal from=west, signal to=nowhere, fill=white]
     at (actu2.west) {control};
 
-    \node (contr) [draw, left=25em of body1, inner ysep=2em, inner xsep=2em]
-    {FeedbackController "fbc"};
+    \node (contr) [draw, align=center, left=22em of body1, inner ysep=2em, inner xsep=2em]
+    {FeedbackController\\"fbc"};
     \node (contrin)
     [draw, signal, signal from=west, signal to=nowhere, fill=white]
     at (contr.west) {desired};
@@ -88,15 +88,15 @@
     \draw (controut2.east) to[out=0, in=180] (actu2in.west);
 
     % Data source.
-    \node (datasrc) [draw, left=5em of contr, inner ysep=1em, inner xsep=2em]
-    {DataSource "traj"};
+    \node (datasrc) [draw, align=center,left=5em of contr, inner ysep=1em, inner xsep=2em]
+    {TableSource\\"traj"};
     \node (datasrcout) [draw, signal, signal to=east, fill=white]
     at (datasrc.east) {output};
 
     \draw (datasrcout.east) -- (contrin.west);
 
     % Reporter.
-    \node (rep) [draw, right=10em of body1, inner sep=2em] {FileReporter};
+    \node (rep) [draw, right=8.5em of body1, inner sep=2em] {TableReporter};
 
     % Reporter inputs.
     \matrix at (rep.west) {

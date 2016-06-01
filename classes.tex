@@ -1,6 +1,6 @@
-\documentclass[landscape]{letter}
+\documentclass{standalone}
 %\documentclass[tikz]{standalone}
-\usepackage[margin=0.5in]{geometry}
+%\usepackage[margin=0.5in]{geometry}
 % Use the Helvetica font as the sans-serif font.
 \usepackage{helvet} % [scaled]?
 \usepackage[T1]{fontenc}
@@ -61,7 +61,7 @@
     \node (Component) [abstract, below=of Object, align=center] {
         Component \\ \footnotesize{connectors, inputs, outputs}
     };
-    \node (ModelComponent) [abstract, below=8ex of Component] {ModelComponent};
+    \node (ModelComponent) [abstract, below=15ex of Component] {ModelComponent};
     \node (Model) [below=of ModelComponent, align=center] {
         Model \\ \footnotesize{contains SimTK System}
     };
@@ -74,6 +74,7 @@
     % The midway is just to draw "vertical-horizontal-vertical" path below.
     \draw [<-] (Object) -- (Component) node[midway, draw=none] (kinkC) {};
     \draw [<-] (Component) -- (ModelComponent);
+    \draw [<-] (Component) -- (ModelComponent) node[very near start, draw=none] (kinkMC) {};
     \draw [<-] (ModelComponent) -- (Model) node[midway, draw=none] (kinkM) {};
     % The "(node |- node) -|" syntax draws a vertical-horizontal-vertical path.
     \draw [<-] (ModelComponent) -- (Model |- kinkM) -| (Frame);
@@ -82,8 +83,37 @@
     \draw [<-] (ModelComponent) -- (Model |- kinkM) -| (Controller);
     \draw [<-] (ModelComponent) -- (Model |- kinkM) -| (Constraint);
 
+    % Reporters.
+    \node (AbstractReporter) [abstract, below right=3ex and 0em of Component]
+    {AbstractReporter};
+    \draw [<-] (Component) -- (ModelComponent |- kinkMC) -| (AbstractReporter);
+    \begin{scope} [
+            text height=1.5ex, text depth=.25ex,
+        ]
+        \node (TableReporter) [below right=of AbstractReporter.center]
+            {TableReporter};
+        \node (ConsoleReporter) [below=of TableReporter.west,
+            anchor=west]
+            {ConsoleReporter};
+        \node (StatesAccumulator) [below=of ConsoleReporter.west,
+            anchor=west]
+            {StatesAccumulator};
+        \draw[<-] (AbstractReporter) |- (TableReporter);
+        \draw[<-] (AbstractReporter) |- (ConsoleReporter);
+        \draw[<-] (AbstractReporter) |- (StatesAccumulator);
+
+    \end{scope}
+
+    % TableSource.
+    \node (TableSource) [right=4em of AbstractReporter] {TableSource};
+    \draw[<-] (Component) -- (ModelComponent |- kinkMC) -| (TableSource);
+
+    % SignalGenerator.
+    \node (SignalGenerator) [right=of TableSource] {SignalGenerator};
+    \draw[<-] (Component) -- (ModelComponent |- kinkMC) -| (SignalGenerator);
+
     % Tool.
-    \node (Tool) [abstract, below right=3ex and 4em of Object] {Tool};
+    \node (Tool) [abstract, below right=3ex and 26em of Object] {Tool};
     \node (AbstractTool) [abstract, right=7em of Tool] {AbstractTool};
 
     \draw [<-] (Object) -- (Component |- kinkC) -| (Tool);
@@ -264,6 +294,31 @@
         \draw [<-] (Constraint) |- (WeldConstraint);
         \draw [<-] (Constraint) |- (PointOnLineConstraint);
         \draw [<-] (Constraint) |- (CoordinateCouplerConstraint);
+    \end{scope}
+
+
+    % DataTable.
+    \node (DataTable) [below=20ex of Model] {DataTable};
+    \node (TimeSeriesTable) [below=of DataTable] {TimeSeriesTable};
+    \draw [<-] (DataTable) -- (TimeSeriesTable);
+
+    % DataAdapter.
+    \node (DataAdapter) [abstract, right=6ex of DataTable] {DataAdapter};
+    \begin{scope} [
+            text height=1.5ex, text depth=.25ex,
+        ]
+        \node (CSVFileAdapter) [below right=of DataAdapter.center, anchor=west] {CSVFileAdapter};
+        \node (MOTFileAdapter) [below=of CSVFileAdapter.west, anchor=west]
+        {MOTFileAdapter};
+        \node (TRCFileAdapter) [below=of MOTFileAdapter.west, anchor=west]
+        {TRCFileAdapter};
+        \node (C3DFileAdapter) [below=of TRCFileAdapter.west, anchor=west]
+        {C3DFileAdapter};
+
+        \draw [<-] (DataAdapter) |- (CSVFileAdapter);
+        \draw [<-] (DataAdapter) |- (MOTFileAdapter);
+        \draw [<-] (DataAdapter) |- (TRCFileAdapter);
+        \draw [<-] (DataAdapter) |- (C3DFileAdapter);
     \end{scope}
 
 

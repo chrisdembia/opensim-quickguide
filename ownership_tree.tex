@@ -1,0 +1,145 @@
+\documentclass{standalone}
+%\documentclass[tikz]{standalone}
+% Use the Helvetica font as the sans-serif font.
+\usepackage{helvet} % [scaled]?
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{graphdrawing}
+\usetikzlibrary{graphs}
+\usetikzlibrary{positioning}
+\usetikzlibrary{matrix}
+% TODO \usetikzlibrary{calc}
+% TODO \usetikzlibrary{matrix}
+\usegdlibrary{layered}
+\usegdlibrary{circular}
+\usegdlibrary{trees}
+\usegdlibrary{force}
+
+\makeatletter
+\newcount\dirtree@lvl
+\newcount\dirtree@plvl
+\newcount\dirtree@clvl
+\def\dirtree@growth{%
+  \ifnum\tikznumberofcurrentchild=1\relax
+  \global\advance\dirtree@plvl by 1
+  \expandafter\xdef\csname dirtree@p@\the\dirtree@plvl\endcsname{\the\dirtree@lvl}
+  \fi
+  \global\advance\dirtree@lvl by 1\relax
+  \dirtree@clvl=\dirtree@lvl
+  \advance\dirtree@clvl by -\csname dirtree@p@\the\dirtree@plvl\endcsname
+  \pgf@xa=0.5cm\relax
+  \pgf@ya=-0.5cm\relax
+  \pgf@ya=\dirtree@clvl\pgf@ya
+  \pgftransformshift{\pgfqpoint{\the\pgf@xa}{\the\pgf@ya}}%
+  \ifnum\tikznumberofcurrentchild=\tikznumberofchildren
+  \global\advance\dirtree@plvl by -1
+  \fi
+}
+
+\tikzset{
+  dirtree/.style={
+    growth function=\dirtree@growth,
+    %every node/.style={anchor=north},
+    growth parent anchor=west,
+    parent anchor=south west,
+    every child node/.style={anchor=west},
+    edge from parent path={([xshift=2ex]\tikzparentnode\tikzparentanchor) |-
+    (\tikzchildnode\tikzchildanchor)}
+  }
+}
+\makeatother
+\begin{document}
+
+% http://tex.stackexchange.com/questions/51228/how-to-increase-the-horizontal-distance-between-nodes
+
+% Use sans-serif font by default.
+\renewcommand*\familydefault{\sfdefault}
+
+% To abbreviate class names.
+\newcommand{\abbrev}{\textasciitilde}
+
+% Use 8pt sans-serif font in tikzpictures.
+% TODO instead of 8pt, use scaling.
+\newcommand{\fontstyle}{\fontsize{8pt}{12}\selectfont\sffamily}
+\tikzstyle{every picture}+=[font=\fontstyle]
+
+% Create the node styles that we'll use.
+\tikzstyle{abstract}=[
+    % Node text will be italic.
+    font=\fontstyle\itshape
+]
+\tikzstyle{connec}=[
+    gray
+]
+% TODO \tikzstyle{horzvert path}=[to path={-| (\tikztotarget)}]
+\tikzstyle{verthorz path}=[to path={|- (\tikztotarget)}]
+
+\begin{tikzpicture}[dirtree,
+    conn/.style={edge from parent/.style={draw=none}}]
+\node {Model}
+    child { node {Ground "ground"} }
+    child { node {Body "arm"} }
+    child { node {Body "forearm" } }
+    child { node {Joint "shoulder"}
+        child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "ground"} }
+        child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "arm"} }
+    }
+    child { node {Joint "elbow"}
+        child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "arm"} }
+        child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "forearm"} }
+    }
+    child { node {Thelen2003Muscle "biceps"} 
+        child { node {FirstOrderActivationDynamics} }
+        child { node {FixedWidthPennationFiberDynamics} }
+    }
+    child { node {Composite "attach\_sites"}
+        child { node {PhysicalOffsetFame "origin"} 
+            child [conn] { node [connec] {Connector<PhysicalFrame> "parent": "../arm" } }
+        }
+        child { node {PhysicalOffsetFame "insertion"} 
+            child [conn] { node [connec] {Connector<PhysicalFrame> "parent": "../forearm" } }
+        }
+    }
+    child { node {Composite "device"}
+        child { node {Body "mass\_origin"} }
+        child { node {Body "mass\_insertion"} }
+        child { node {WeldJoint "anchor\_origin"}
+            child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "../attach\_sites/origin"} }
+            child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "mass\_origin"} }
+        }
+        child { node {WeldJoint "anchor\_insertion"}
+            child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "../attach\_sites/insertion"} }
+            child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "mass\_insertion"} }
+        }
+        child { node {PathActuator "cable"} }
+        child { node {PropMyoController "contr"}
+            child [conn] { node [connec] {Connector<ScalarActuator> "to\_control": "cable"} }
+            child [conn] { node [connec] {Input<double> "activation": "../biceps/activation"} }
+        }
+    };
+\end{tikzpicture}
+
+\end{document}
+
+\node {Model}
+    child { node {Ground "ground"} }
+    child { node {Body "arm"} }
+    child { node {Body "forearm" } }
+    child { node {Joint "shoulder"} }
+    child { node {Joint "elbow"} }
+    child { node {Thelen2003Muscle "biceps"} 
+        child { node {FirstOrderActivationDynamics} }
+        child { node {FixedWidthPennationFiberDynamics} }
+    }
+    child { node {Composite "attach\_sites"}
+        child { node {PhysicalOffsetFame "origin"} }
+        child { node {PhysicalOffsetFame "insertion"} }
+    }
+    child { node {Composite "device"}
+        child { node {Body "mass\_origin"} }
+        child { node {Body "mass\_insertion"} }
+        child { node {WeldJoint "anchor\_origin"} }
+        child { node {WeldJoint "anchor\_insertion"} }
+        child { node {PathActuator "cable"} }
+        child { node {PropMyoController} }
+    };

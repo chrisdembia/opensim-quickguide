@@ -1,0 +1,67 @@
+\documentclass[tikz, border=5pt, multi]{standalone}
+\usepackage{forest}
+\usetikzlibrary{arrows.meta}
+\forestset{
+  dir tree/.style={
+    for tree={
+      parent anchor=south west,
+      child anchor=west,
+      anchor=mid west,
+      inner ysep=1pt,
+      grow'=0,
+      align=left,
+      edge path={
+        \noexpand\path [draw, \forestoption{edge}] (!u.parent anchor) ++(1em,0) |- (.child anchor)\forestoption{edge label};
+      },
+      font=\sffamily,
+      if n children=0{}{
+        delay={
+          prepend={[,phantom, calign with current]}
+        }
+      },
+      fit=band,
+      before computing xy={
+        l=2em
+      }
+    },
+  }
+}
+\begin{document}
+\begin{forest}
+  dir tree
+  [root
+    [bin
+    ]
+    [etc
+      [X11]
+      [cron.d]
+      [default]
+    ]
+    [local
+      [bin]
+      [etc]
+      [texlive
+        [2014
+          [bin]
+          [readme-html.dir]
+          [texmf-config]
+          [texmf-dist]
+          [texmf-var]
+        ]
+        [texmf-local]
+      ]
+    ]
+    [usr
+      [bin]
+      [include]
+      [share]
+    ]
+    [var
+      [cache]
+      [log]
+      [spool]
+      [tmp]
+    ]
+  ]
+\end{forest}
+\end{document}
