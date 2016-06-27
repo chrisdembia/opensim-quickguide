@@ -81,12 +81,13 @@
     child { node {Body "arm"} }
     child { node {Body "forearm" } }
     child { node {Joint "shoulder"}
-        child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "ground"} }
-        child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "arm"} }
+        child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame":
+        "../ground"} }
+        child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "../arm"} }
     }
     child { node {Joint "elbow"}
-        child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "arm"} }
-        child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "forearm"} }
+        child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "../arm"} }
+        child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "../forearm"} }
     }
     child { node {Thelen2003Muscle "biceps"} 
         child { node {FirstOrderActivationDynamics} }
@@ -94,27 +95,27 @@
     }
     child { node {Composite "attach\_sites"}
         child { node {PhysicalOffsetFame "origin"} 
-            child [conn] { node [connec] {Connector<PhysicalFrame> "parent": "../arm" } }
+            child [conn] { node [connec] {Connector<PhysicalFrame> "parent": "../../arm" } }
         }
         child { node {PhysicalOffsetFame "insertion"} 
-            child [conn] { node [connec] {Connector<PhysicalFrame> "parent": "../forearm" } }
+            child [conn] { node [connec] {Connector<PhysicalFrame> "parent": "../../forearm" } }
         }
     }
     child { node {Composite "device"}
         child { node {Body "mass\_origin"} }
         child { node {Body "mass\_insertion"} }
         child { node {WeldJoint "anchor\_origin"}
-            child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "../attach\_sites/origin"} }
-            child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "mass\_origin"} }
+            child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "../../attach\_sites/origin"} }
+            child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "../mass\_origin"} }
         }
         child { node {WeldJoint "anchor\_insertion"}
-            child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "../attach\_sites/insertion"} }
-            child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "mass\_insertion"} }
+            child [conn] { node [connec] {Connector<PhysicalFrame> "parent\_frame": "../../attach\_sites/insertion"} }
+            child [conn] { node [connec] {Connector<PhysicalFrame> "child\_frame": "../mass\_insertion"} }
         }
         child { node {PathActuator "cable"} }
         child { node {PropMyoController "contr"}
-            child [conn] { node [connec] {Connector<ScalarActuator> "to\_control": "cable"} }
-            child [conn] { node [connec] {Input<double> "activation": "../biceps/activation"} }
+            child [conn] { node [connec] {Connector<ScalarActuator> "to\_control": "../cable"} }
+            child [conn] { node [connec] {Input<double> "activation": "../../biceps/activation"} }
         }
     };
 \end{tikzpicture}

@@ -3,9 +3,10 @@
 %\usepackage{helvet} % [scaled]?
 \usepackage[T1]{fontenc}
 %\usepackage[charter]{mathdesign}
+\usepackage{dejavu}
 %\def\ttdefault{blg}
-\usepackage{inconsolata}
-\usepackage{lmodern}
+%\usepackage{inconsolata}
+%\usepackage{lmodern}
 %\usepackage[scaled]{beramono}
 %\usepackage[scaled]{ulgothic}
 \usepackage{tikz}
@@ -31,9 +32,11 @@
 \lstset{language=C++, commentstyle=\color{black!30!green}\ttfamily}
 \begin{tikzpicture}%[remember picture, overlay]
 \node (classdeclare) [draw] {
-\begin{lstlisting}[language=c++, escapechar=!]
+\begin{lstlisting}[language=c++, escapechar=!,
+                   keywordstyle=\color{blue},
+                   stringstyle=\color{red}]
 class MyComponent : public OpenSim::ModelComponent {
-  OpenSim_DECLARE_CONCRETE_OBJECT(MyComponent, OpenSim::Component);
+  OpenSim_DECLARE_CONCRETE_OBJECT(MyComponent, OpenSim::ModelComponent);
 public:
   OpenSim_DECLARE_PROPERTY(name, T, comment);
   OpenSim_DECLARE_UNNAMED_PROPERTY(T, comment);
@@ -41,9 +44,7 @@ public:
   OpenSim_DECLARE_LIST_PROPERTY(name, T, comment);
   // See also: LIST_PROPERTY_ATLEAST, _ATMOST, and _SIZE
 
-  void constructConnectors() {
-      constructConnector<T>(name);
-  }
+  OpenSim_DECLARE_CONNECTOR(name, T, comment);
 
   OpenSim_DECLARE_OUTPUT(name, T, function, dependsOnStage);
   OpenSim_DECLARE_LIST_OUTPUT(name, T, function, dependsOnStage);
@@ -96,8 +97,6 @@ or "Object" (T = Function, or any other Object).
 Unnamed properties use the type T as their name.
 Optional properties can have no value.
 List properties contain a list of objects of type T.
-
-
 
 
 

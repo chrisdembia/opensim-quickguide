@@ -53,17 +53,17 @@
     % TODO use node label as text.
     % TODO there is a "below right of"
     \node (Object) [abstract, align=center] {
-        Object \\ \footnotesize{properties}
+        Object \\ \footnotesize{\color{gray}properties}
     };
     % TODO don't italicize the mini descriptions.
     % TODO perhaps the descriptions aren't part of the nodes, but 
     % beside them somehow
     \node (Component) [abstract, below=of Object, align=center] {
-        Component \\ \footnotesize{connectors, inputs, outputs}
+        Component \\ \footnotesize{\color{gray}connectors, inputs, outputs}
     };
     \node (ModelComponent) [abstract, below=15ex of Component] {ModelComponent};
     \node (Model) [below=of ModelComponent, align=center] {
-        Model \\ \footnotesize{contains SimTK System}
+        Model \\ \footnotesize{\color{gray}contains SimTK System}
     };
     \node (Frame) [abstract, right=of Model] {Frame};
     \node (Joint) [abstract, right=6em of Frame] {Joint};
@@ -84,37 +84,52 @@
     \draw [<-] (ModelComponent) -- (Model |- kinkM) -| (Constraint);
 
     % Reporters.
-    \node (AbstractReporter) [abstract, below right=3ex and 0em of Component]
+    \node (AbstractReporter) [abstract, below right=3ex and -2em of Component]
     {AbstractReporter};
     \draw [<-] (Component) -- (ModelComponent |- kinkMC) -| (AbstractReporter);
     \begin{scope} [
             text height=1.5ex, text depth=.25ex,
         ]
         \node (TableReporter) [below right=of AbstractReporter.center]
-            {TableReporter};
+            {Table\abbrev};
         \node (ConsoleReporter) [below=of TableReporter.west,
             anchor=west]
-            {ConsoleReporter};
-        \node (StatesAccumulator) [below=of ConsoleReporter.west,
+            {Console\abbrev};
+        \node (StatesTrajectoryReporter) [below=of ConsoleReporter.west,
             anchor=west]
-            {StatesAccumulator};
+            {StatesTrajectory\abbrev};
         \draw[<-] (AbstractReporter) |- (TableReporter);
         \draw[<-] (AbstractReporter) |- (ConsoleReporter);
-        \draw[<-] (AbstractReporter) |- (StatesAccumulator);
+        \draw[<-] (AbstractReporter) |- (StatesTrajectoryReporter);
 
     \end{scope}
 
     % TableSource.
-    \node (TableSource) [right=4em of AbstractReporter] {TableSource};
+    \node (TableSource) [right=1em of AbstractReporter] {TableSource};
     \draw[<-] (Component) -- (ModelComponent |- kinkMC) -| (TableSource);
 
-    % SignalGenerator.
     \node (SignalGenerator) [right=of TableSource] {SignalGenerator};
     \draw[<-] (Component) -- (ModelComponent |- kinkMC) -| (SignalGenerator);
 
+    % Geometry.
+    \node (Geometry) [right=of SignalGenerator] {Geometry};
+    \draw[<-] (Component) -- (ModelComponent |- kinkMC) -| (Geometry);
+
+    \begin{scope} [
+            text height=1.5ex, text depth=.25ex,
+        ]
+        \node (Mesh) [below right=of Geometry.center] {Mesh};
+        \node (Sphere) [below=of Mesh.west, anchor=west] {Sphere};
+        \node (Brick) [below=of Sphere.west, anchor=west] {Brick};
+        \draw[<-] (Geometry) |- (Mesh);
+        \draw[<-] (Geometry) |- (Sphere);
+        \draw[<-] (Geometry) |- (Brick);
+    \end{scope}
+
+
     % Tool.
-    \node (Tool) [abstract, below right=3ex and 26em of Object] {Tool};
-    \node (AbstractTool) [abstract, right=7em of Tool] {AbstractTool};
+    \node (Tool) [abstract, below right=3ex and 28em of Object, color=gray] {Tool};
+    \node (AbstractTool) [abstract, right=7em of Tool, color=gray] {AbstractTool};
 
     \draw [<-] (Object) -- (Component |- kinkC) -| (Tool);
     \draw [<-] (Object) -- (Component |- kinkC) -| (AbstractTool);
@@ -123,32 +138,32 @@
             text height=1.5ex, text depth=.25ex,
         ]
         \node (InverseKinematicsTool)
-            [below right=of Tool.center]
+            [below right=of Tool.center, color=gray]
             {InverseKinematics\abbrev};
         \node (InverseDynamicsTool)
-            [below=of InverseKinematicsTool.west, anchor=west]
+            [below=of InverseKinematicsTool.west, anchor=west, color=gray]
             {InverseDynamics\abbrev};
 
-        \draw [<-] (Tool) |- (InverseKinematicsTool);
-        \draw [<-] (Tool) |- (InverseDynamicsTool);
+        \draw [<-, color=gray] (Tool) |- (InverseKinematicsTool);
+        \draw [<-, color=gray] (Tool) |- (InverseDynamicsTool);
 
         \node (RRATool)
-            [below right=of AbstractTool.center]
+            [below right=of AbstractTool.center, color=gray]
             {RRATool};
         \node (CMCTool)
-            [below=of RRATool.west, anchor=west]
+            [below=of RRATool.west, anchor=west, color=gray]
             {CMCTool};
         \node (ForwardTool)
-            [below=of CMCTool.west, anchor=west]
+            [below=of CMCTool.west, anchor=west, color=gray]
             {ForwardTool};
         \node (AnalyzeTool)
-            [below=of ForwardTool.west, anchor=west]
+            [below=of ForwardTool.west, anchor=west, color=gray]
             {AnalyzeTool};
 
-        \draw [<-] (AbstractTool) |- (RRATool);
-        \draw [<-] (AbstractTool) |- (CMCTool);
-        \draw [<-] (AbstractTool) |- (ForwardTool);
-        \draw [<-] (AbstractTool) |- (AnalyzeTool);
+        \draw [<-, color=gray] (AbstractTool) |- (RRATool);
+        \draw [<-, color=gray] (AbstractTool) |- (CMCTool);
+        \draw [<-, color=gray] (AbstractTool) |- (ForwardTool);
+        \draw [<-, color=gray] (AbstractTool) |- (AnalyzeTool);
 
     \end{scope}
 
@@ -308,15 +323,15 @@
             text height=1.5ex, text depth=.25ex,
         ]
         \node (CSVFileAdapter) [below right=of DataAdapter.center, anchor=west] {CSVFileAdapter};
-        \node (MOTFileAdapter) [below=of CSVFileAdapter.west, anchor=west]
-        {MOTFileAdapter};
-        \node (TRCFileAdapter) [below=of MOTFileAdapter.west, anchor=west]
+        \node (STOFileAdapter) [below=of CSVFileAdapter.west, anchor=west]
+        {STOFileAdapter};
+        \node (TRCFileAdapter) [below=of STOFileAdapter.west, anchor=west]
         {TRCFileAdapter};
         \node (C3DFileAdapter) [below=of TRCFileAdapter.west, anchor=west]
         {C3DFileAdapter};
 
         \draw [<-] (DataAdapter) |- (CSVFileAdapter);
-        \draw [<-] (DataAdapter) |- (MOTFileAdapter);
+        \draw [<-] (DataAdapter) |- (STOFileAdapter);
         \draw [<-] (DataAdapter) |- (TRCFileAdapter);
         \draw [<-] (DataAdapter) |- (C3DFileAdapter);
     \end{scope}
